@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карта связей: Т-Банк</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ink:#060A12; --panel:#0C1322; --panel2:#101A2E; --line:#1C2A45; --line2:#2A3B5E;
+  --fg:#DCE6F7; --muted:#7E8DAA; --dim:#4A5A7A;
+  --cyan:#43D3FF; --violet:#9A86FF; --amber:#FFB547; --green:#46E3A3; --coral:#FF6F6F; --yellow:#FFDD2D;
+  --f-display:"Unbounded","Onest",system-ui,sans-serif; --f-body:"Onest",system-ui,-apple-system,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ink);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.45;
+  background-image:radial-gradient(1200px 600px at 70% -10%,rgba(67,211,255,.07),transparent 60%),radial-gradient(900px 500px at 0% 100%,rgba(154,134,255,.06),transparent 60%);min-height:100vh}
+.wrap{padding-inline:16px;max-width:1400px;margin:0 auto}
+.top{position:sticky;top:0;z-index:20;background:rgba(6,10,18,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding-block:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:34px;height:34px;border:1px solid var(--yellow);border-radius:8px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;color:var(--yellow);font-size:15px;box-shadow:0 0 18px rgba(255,221,45,.22) inset}
+.brand h1{font-family:var(--f-display);font-size:15px;letter-spacing:.06em;margin:0;font-weight:700}
+.brand .sub{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.kpis{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.kpi{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:4px 9px}
+.kpi b{display:block;font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums}
+.kpi span{font-size:10.5px;color:var(--muted)}
+.kpi.main{border-color:var(--yellow)} .kpi.main b{color:var(--yellow)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;padding-block:0 10px}
+.tab{border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 14px;cursor:pointer;font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--panel2);color:var(--fg);border-color:var(--cyan);box-shadow:0 0 0 1px rgba(67,211,255,.25)}
+.tab .n{color:var(--dim);margin-right:6px}
+main{padding-block:16px 40px}
+.thesis{border:1px solid var(--line);border-left:3px solid var(--yellow);background:var(--panel);border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.thesis b{color:var(--yellow);font-family:var(--f-display);font-weight:500;font-size:15px}
+.thesis p{margin:4px 0 0;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:14px}
+@media (max-width:980px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;min-width:0}
+.ph{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ph h2{margin:0;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin-right:5px}
+svg{display:block;width:100%;height:auto}
+.node rect{rx:10;ry:10}
+.node{cursor:pointer}
+.node text{font-family:var(--f-body)}
+.node .t1{font-size:13px;font-weight:600;fill:var(--fg)}
+.node .t2{font-size:11px;fill:var(--muted);font-family:var(--f-mono)}
+.node.sel rect{stroke-width:2.2}
+.edge{fill:none;stroke-width:1.6;transition:opacity .25s}
+.edge.off{opacity:.07}
+.elabel{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted);transition:opacity .25s}
+.elabel.off{opacity:0}
+.node.off{opacity:.25}
+.side{padding:12px 14px;display:flex;flex-direction:column;gap:10px;max-height:760px;overflow:auto}
+.side h3{margin:0;font-family:var(--f-display);font-weight:500;font-size:14px}
+.side .lead{color:var(--muted);margin:0;font-size:13px}
+.item{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:9px 11px}
+.item .h{display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.item .h b{font-weight:600;font-size:13.5px}
+.tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;border-radius:999px;padding:1px 8px;border:1px solid;white-space:nowrap}
+.tag.f{color:var(--green);border-color:rgba(70,227,163,.45)}
+.tag.r{color:var(--amber);border-color:rgba(255,181,71,.45)}
+.item p{margin:4px 0 0;font-size:13px;color:var(--fg)}
+.item .src{font-family:var(--f-mono);font-size:10.5px;color:var(--dim);margin-top:4px}
+.chain{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px}
+@media (max-width:720px){.chain{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.link{border:1px solid var(--line2);border-radius:10px;padding:10px 12px;background:var(--panel2)}
+.link .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.link .v{font-family:var(--f-display);font-size:15px;margin:4px 0}
+.link .who{font-size:12.5px;color:var(--muted)}
+.link.gap{border-color:var(--coral);box-shadow:0 0 0 1px rgba(255,111,111,.2) inset}
+.link.gap .v{color:var(--coral)}
+.link.ok{border-color:var(--yellow)} .link.ok .v{color:var(--yellow)}
+.foot{font-family:var(--f-mono);font-size:10.5px;color:var(--dim);padding:10px 14px;border-top:1px solid var(--line)}
+.note{color:var(--muted);font-size:12px;margin-top:14px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="top-in">
+    <div class="brand"><div class="logo">Т</div><div><h1>КАРТА СВЯЗЕЙ: Т-БАНК</h1><div class="sub">aftersales РФ · проект «Т Авто» · ноябрь 2026</div></div></div>
+    <div class="kpis">
+      <div class="kpi main"><b>100 394</b><span>СТО-ИП (80%)</span></div>
+      <div class="kpi"><b>55,7 млн</b><span>клиентов Т-Банка</span></div>
+      <div class="kpi"><b>124 793</b><span>СТО в России</span></div>
+      <div class="kpi"><b>4-4,3 трлн ₽</b><span>ремонт и запчасти</span></div>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-v="now"><span class="n">01</span>Связи сейчас</button>
+    <button class="tab" role="tab" data-v="money"><span class="n">02</span>Деньги и клиенты</button>
+    <button class="tab" role="tab" data-v="gap"><span class="n">03</span>Разрыв VIN · заказ-наряд · запчасть</button>
+    <button class="tab" role="tab" data-v="future"><span class="n">04</span>С решением «Т Авто»</button>
+  </nav>
+</div></header>
+<main class="wrap">
+  <div class="thesis"><b>Главный аргумент: 80% автосервисов России - ИП.</b>
+    <p>100 394 из 124 793 СТО - индивидуальные предприниматели: прямая аудитория РКО, эквайринга и кредитов Т-Банка. Сегодня банк видит только платёж, а заказ-наряд и запчасть проходят мимо.</p></div>
+  <div class="grid2">
+    <section class="panel">
+      <div class="ph"><h2 id="vtitle">Связи сейчас</h2>
+        <div class="legend"><span><i style="border-color:var(--cyan)"></i>связь</span><span><i style="border-color:var(--green)"></i>деньги</span><span><i style="border-color:var(--coral);border-top-style:dashed"></i>разрыв</span><span><i style="border-color:var(--yellow)"></i>Т Авто</span></div></div>
+      <svg id="map" viewBox="0 0 1100 720" role="img" aria-label="Схема связей Т-Банка с участниками рынка aftersales"></svg>
+      <div id="chainBox" hidden>
+        <div class="chain" id="chain"></div>
+      </div>
+      <div class="foot">Источники: МВД (The Moscow Times), Контур.Фокус, Автостат (vc.ru), Data Insight и ЮKassa, Интерфакс, Т-Банк, Сбер, сайты сетей и союзов, база abcp (842), финмодель «Т Авто» v2. «Факт» - опубликованная цифра, «расчёт» - наш расчёт или вывод.</div>
+    </section>
+    <aside class="panel side" id="side" aria-live="polite"></aside>
+  </div>
+  <p class="note">Нажмите на узел, чтобы увидеть его связи. Карта собрана из общей карты отрасли (842 дистрибьютора, 161 бренд) и брифинга от 22.11.2026.</p>
+</main>
+<script>
+const C={cyan:"#43D3FF",green:"#46E3A3",coral:"#FF6F6F",yellow:"#FFDD2D",violet:"#9A86FF",amber:"#FFB547",line:"#2A3B5E",panel:"#101A2E"};
+const N=[
+ {id:"T",l:"Т-Банк",s:"55,7 млн клиентов",x:550,y:360,w:190,c:C.yellow,center:1},
+ {id:"own",l:"Автовладельцы",s:"52,8 млн легковых",x:140,y:130,c:C.cyan},
+ {id:"sto",l:"Все СТО России",s:"124 793 · 80% ИП",x:550,y:80,w:200,c:C.yellow},
+ {id:"agg",l:"Агрегатор «Автосервисы»",s:"1000+ СТО",x:310,y:215,w:200,c:C.cyan},
+ {id:"fit",l:"FIT SERVICE",s:"~550 СТО",x:150,y:330,c:C.violet},
+ {id:"svoi",l:"Свой Механик",s:"~10 000 СТО",x:800,y:80,c:C.violet},
+ {id:"every",l:"EveryCar",s:"~9 000 СТО",x:990,y:170,c:C.violet},
+ {id:"rossko",l:"Росско",s:"АВТОКОМ",x:880,y:290,c:C.violet},
+ {id:"dist",l:"Дистрибьюторы",s:"842 в базе",x:830,y:420,c:C.cyan},
+ {id:"big4",l:"Big4",s:"Форум · Армтек · Берг · ПартКом",x:960,y:540,w:230,c:C.cyan},
+ {id:"uni",l:"Союзы",s:"AD 7 · NEXUS 23 · АВТОКОМ 18",x:930,y:650,w:230,c:C.violet},
+ {id:"mp",l:"Маркетплейсы",s:"Ozon · WB · Я.Маркет",x:640,y:610,w:190,c:C.cyan},
+ {id:"ins",l:"Т-Страхование",s:"КАСКО → ремонт",x:330,y:540,c:C.cyan},
+ {id:"sber",l:"Сбер",s:"50 млн автомобилистов",x:140,y:620,w:190,c:C.dim||"#4A5A7A"},
+ {id:"tavto",l:"Т Авто · SUP",s:"30 000 СТО · 5 000 магазинов",x:560,y:470,w:240,c:C.yellow,future:1},
+ {id:"shops",l:"Магазины «Т Авто»",s:"5 000 без склада",x:380,y:650,w:190,c:C.yellow,future:1}
+];
+// view: now | money | gap | future ; tag f/r
+const E=[
+ {a:"T",b:"own",v:["now"],k:"link",t:"Клиенты экосистемы",d:"55,7 млн клиентов экосистемы, 34,3 млн активны в месяц.",tag:"f",src:"Т-Банк, I полугодие 2026"},
+ {a:"T",b:"agg",v:["now"],k:"link",t:"Свой агрегатор СТО",d:"Запись в сервис из приложения, 1000+ партнёрских СТО (в апреле 2026 - 800+).",tag:"f",src:"Т-Банк (ноябрь 2026); ТАСС (апрель 2026)"},
+ {a:"agg",b:"fit",v:["now"],k:"link",t:"FIT SERVICE в агрегаторе",d:"Сеть FIT SERVICE - партнёр агрегатора Т-Банка.",tag:"f",src:"«За рулём», 2026"},
+ {a:"rossko",b:"fit",v:["now"],k:"link",t:"Росско держит FIT SERVICE",d:"Росско держит две сети: Свой Механик и FIT SERVICE. Клиенты Т-Банка едут в сеть дистрибьютора, который не связан с банком.",tag:"f",src:"сайты сетей; карта отрасли"},
+ {a:"rossko",b:"svoi",v:["now"],k:"link",t:"Росско держит Свой Механик",d:"Свой Механик - около 10 000 СТО.",tag:"f",src:"svoimehanik.ru"},
+ {a:"rossko",b:"every",v:["now"],k:"link",t:"EveryCar - сеть АВТОКОМ",d:"EveryCar (около 9 000 СТО) - сеть участников АВТОКОМ: Росско, Авто-Евро, Авторусь, МоТехС. Берёт 6% с оборота.",tag:"f",src:"autocom.parts"},
+ {a:"big4",b:"uni",v:["now"],k:"link",t:"Big4 в союзах",d:"Берг и ПартКом входят в AD International. Ни один из Big4 не входит в АВТОКОМ.",tag:"f",src:"сайты союзов; карта отрасли"},
+ {a:"dist",b:"big4",v:["now"],k:"link",t:"Big4 среди 842",d:"Форум-Авто, Армтек, Берг, ПартКом - крупнейшие из 842 дистрибьюторов базы.",tag:"f",src:"база abcp (842)"},
+ {a:"dist",b:"rossko",v:["now"],k:"link",t:"Росско - участник АВТОКОМ",d:"53 из 842 дистрибьюторов работают через ОАЭ.",tag:"f",src:"карта отрасли"},
+ {a:"T",b:"ins",v:["now","money"],k:"link",t:"Т-Страхование в группе",d:"КАСКО по рынку: 336 млрд сборов, 216,4 млрд выплат в 2025.",tag:"f",src:"Интерфакс"},
+ {a:"T",b:"sto",v:["now","future"],k:"main",t:"80% СТО - ИП",d:"100 394 из 124 793 СТО - ИП: прямая аудитория РКО, эквайринга и кредитов. Сейчас связи нет: банк не продаёт сервисам продукт на каждый день.",tag:"f",src:"Контур.Фокус, сентябрь 2026"},
+ {a:"sber",b:"own",v:["now"],k:"link",t:"Сбер видит автомобилистов",d:"50 млн автомобилистов из 110 млн клиентов; 37 млн платят за топливо, 6 млн за запчасти.",tag:"f",src:"Сбер"},
+ {a:"mp",b:"own",v:["now"],k:"link",t:"Онлайн-канал",d:"247 млрд руб. за II кв. 2026 (+39,5%), 64% у Ozon, WB и Я.Маркета.",tag:"f",src:"Data Insight и ЮKassa"},
+ // money
+ {a:"own",b:"sto",v:["money"],k:"money",t:"Владельцы → СТО: 1,204 трлн",d:"Рынок услуг СТО 2025, около +20% за год; почти половина - «серая зона».",tag:"f",src:"Автостат через vc.ru"},
+ {a:"own",b:"dist",v:["money"],k:"money",t:"Запчасти: 2,8-3,1 трлн",d:"32,7 млрд долл. в 2025, +44% за 5 лет. 23% владельцев покупают через СТО или дилера, 35% онлайн.",tag:"f",src:"Автостат; опрос Авито"},
+ {a:"own",b:"mp",v:["money"],k:"money",t:"Онлайн: около 1 трлн в год",d:"247 млрд за квартал × 4; у маркетплейсов около 0,63 трлн.",tag:"r",src:"расчёт по Data Insight и ЮKassa"},
+ {a:"ins",b:"sto",v:["money"],k:"money",t:"КАСКО → ремонт: 216,4 млрд",d:"Выплаты КАСКО 2025, ремонт по полису без контроля цены запчастей.",tag:"f",src:"Интерфакс"},
+ {a:"dist",b:"sto",v:["money"],k:"money",t:"Запчасти в СТО мимо банка",d:"Закупка сервиса у дистрибьюторов идёт по счетам без данных для банка: оборот ИП-СТО не виден.",tag:"r",src:"наш вывод"},
+ {a:"own",b:"T",v:["money"],k:"money",t:"Т-Банк видит только платёж",d:"Платёж картой виден банку, а что ремонтировали и какую деталь поставили - нет.",tag:"r",src:"наш вывод"},
+ // gap
+ {a:"own",b:"sto",v:["gap"],k:"gap",t:"VIN → заказ-наряд",d:"VIN знает владелец и страховщик, заказ-наряд остаётся в 1С сервиса.",tag:"r",src:"наш вывод по брифингу"},
+ {a:"sto",b:"dist",v:["gap"],k:"gap",t:"Заказ-наряд → запчасть",d:"Дистрибьютор видит заказ детали, но не машину и не ремонт.",tag:"r",src:"наш вывод по брифингу"},
+ {a:"T",b:"sto",v:["gap"],k:"gap",t:"Банк → сервис",d:"Т-Банк не видит ни заказ-наряд, ни запчасть: нет данных для скоринга ИП-СТО.",tag:"r",src:"наш вывод по брифингу"},
+ {a:"ins",b:"dist",v:["gap"],k:"gap",t:"КАСКО → цена детали",d:"216,4 млрд выплат КАСКО без контроля цены запчастей.",tag:"f",src:"Интерфакс; брифинг"},
+ // future
+ {a:"T",b:"tavto",v:["future"],k:"future",t:"Банк в каждой операции",d:"QR-оплата, РКО, кредит на запчасти: около 4 млрд руб. в год сверх модели к году 5.",tag:"r",src:"финмодель «Т Авто» v2"},
+ {a:"tavto",b:"sto",v:["future"],k:"future",t:"30 000 СТО = 24% всех СТО",d:"30 000 из 124 793. Для сравнения AUTONOM в базе: 20 000 = 16%.",tag:"r",src:"финмодель «Т Авто» v2; брифинг"},
+ {a:"tavto",b:"dist",v:["future"],k:"future",t:"30 дистрибьюторов-партнёров",d:"Закупки через партнёров Т в год 5 - 120 млрд руб., около 4% рынка запчастей; комиссия 1%.",tag:"r",src:"финмодель «Т Авто» v2"},
+ {a:"tavto",b:"shops",v:["future"],k:"future",t:"5 000 магазинов без склада",d:"Франшиза на сайте ZAPO, заказ уходит дистрибьютору с QR-кодом. Число магазинов в стране около 5 000 - оценка Саши.",tag:"r",src:"финмодель «Т Авто» v2"},
+ {a:"own",b:"tavto",v:["future"],k:"future",t:"Запись и заезд из приложения",d:"7,3 млн заездов по лидам в год 5, комиссия 10% с чека.",tag:"r",src:"финмодель «Т Авто» v2"},
+ {a:"ins",b:"tavto",v:["future"],k:"future",t:"КАСКО по фиксированным ценам",d:"Направление ремонтов в сеть с подтверждённой деталью и ценой.",tag:"r",src:"предложение «Т Авто»"},
+];
+const VIEWS={
+ now:{t:"Связи сейчас",h:"С кем Т-Банк связан сейчас",p:"Банк держит клиентов и свой агрегатор, но сети СТО и закупки контролируют дистрибьюторы и их союзы."},
+ money:{t:"Деньги и клиенты",h:"Через кого идут деньги и клиенты",p:"Из 4-4,3 трлн руб. в год банк видит только платёж. Запчасти и заказ-наряд проходят мимо."},
+ gap:{t:"Разрыв VIN · заказ-наряд · запчасть",h:"Где рвётся связка",p:"Никто на рынке не видит связку «VIN - заказ-наряд - запчасть» целиком."},
+ future:{t:"С решением «Т Авто»",h:"Какое место займёт Т-Банк",p:"Т Авто на платформе SUP связывает VIN, заказ-наряд, запчасть и платёж, а банк получает ИП-СТО как клиентов."}
+};
+const CH={
+ gap:[["VIN","Знают","владелец, страховщик","gap"],["Заказ-наряд","Знает","только СТО в 1С","gap"],["Запчасть","Знает","дистрибьютор или маркетплейс","gap"],["Платёж","Знает","банк - только сумму","gap"]],
+ future:[["VIN","SUP","OBD-адаптер и приложение","ok"],["Заказ-наряд","1С-коннектор","запись из приложения Т-Банка","ok"],["Запчасть","Заказ","у 30 партнёров Т, 1%","ok"],["Платёж","QR Т-Банка","РКО и кредит для ИП-СТО","ok"]]
+};
+const svg=document.getElementById("map"),NS="http://www.w3.org/2000/svg";
+const byId=Object.fromEntries(N.map(n=>[n.id,n]));
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e}
+const gE=el("g",{}),gL=el("g",{}),gN=el("g",{});
+const col={link:C.cyan,main:C.yellow,money:C.green,gap:C.coral,future:C.yellow};
+const edgeEls=E.map((e,i)=>{const A=byId[e.a],B=byId[e.b];
+  const mx=(A.x+B.x)/2,my=(A.y+B.y)/2,dx=B.x-A.x,dy=B.y-A.y,len=Math.hypot(dx,dy)||1,off=(i%2?1:-1)*Math.min(40,len*.12);
+  const cx=mx-dy/len*off,cy=my+dx/len*off;
+  const p=el("path",{d:`M${A.x},${A.y} Q${cx},${cy} ${B.x},${B.y}`,class:"edge",stroke:col[e.k],"stroke-dasharray":e.k==="gap"?"6 5":(e.tag==="r"&&e.k!=="future"?"2 4":"none")},gE);
+  const lx=.25*A.x+.5*cx+.25*B.x,ly=.25*A.y+.5*cy+.25*B.y;
+  const tx=el("text",{x:lx,y:ly-4,"text-anchor":"middle",class:"elabel"},gL);tx.textContent=e.t;
+  return {e,p,tx}});
+const nodeEls=N.map(n=>{const w=n.w||170,h=n.center?62:50;const g=el("g",{class:"node",transform:`translate(${n.x-w/2},${n.y-h/2})`,tabindex:0,role:"button","aria-label":n.l},gN);
+  el("rect",{width:w,height:h,fill:n.center?"#1A1E10":C.panel,stroke:n.c,"stroke-width":n.center?2:1.2},g);
+  const t1=el("text",{x:w/2,y:n.center?26:21,"text-anchor":"middle",class:"t1"},g);t1.textContent=n.l;if(n.center){t1.setAttribute("style","font-family:Unbounded,Onest;font-size:15px;fill:#FFDD2D")}
+  const t2=el("text",{x:w/2,y:n.center?46:38,"text-anchor":"middle",class:"t2"},g);t2.textContent=n.s;
+  g.addEventListener("click",()=>pick(n.id));g.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();pick(n.id)}});
+  return {n,g}});
+let view="now",sel=null;
+const side=document.getElementById("side");
+function item(e){const tag=e.tag==="f"?'<span class="tag f">факт</span>':'<span class="tag r">расчёт</span>';
+  return `<div class="item"><div class="h"><b>${e.t}</b>${tag}</div><p>${e.d}</p><div class="src">${byId[e.a].l} ↔ ${byId[e.b].l} · ${e.src}</div></div>`}
+function render(){
+  const V=VIEWS[view];document.getElementById("vtitle").textContent=V.t;
+  const act=E.filter(e=>e.v.includes(view)&&(!sel||e.a===sel||e.b===sel));
+  const on=new Set(act);
+  edgeEls.forEach(o=>{const v=on.has(o.e);o.p.classList.toggle("off",!v);o.tx.classList.toggle("off",!v)});
+  const used=new Set();E.filter(e=>e.v.includes(view)).forEach(e=>{used.add(e.a);used.add(e.b)});
+  nodeEls.forEach(o=>{const hide=(o.n.future&&view!=="future");o.g.style.display=hide?"none":"";o.g.classList.toggle("off",!used.has(o.n.id));o.g.classList.toggle("sel",o.n.id===sel)});
+  const cb=document.getElementById("chainBox");
+  if(CH[view]){cb.hidden=false;document.getElementById("chain").innerHTML=CH[view].map(([k,v,w,c])=>`<div class="link ${c}"><div class="k">${k}</div><div class="v">${v}</div><div class="who">${w}</div></div>`).join("")}else cb.hidden=true;
+  side.innerHTML=`<h3>${sel?byId[sel].l:V.h}</h3><p class="lead">${sel?'Связи узла в этом виде. Нажмите на узел ещё раз, чтобы снять выбор.':V.p}</p>`+(act.length?act.map(item).join(""):'<p class="lead">В этом виде у узла нет связей.</p>');
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===view));
+}
+function pick(id){sel=sel===id?null:id;render()}
+function setView(v){if(!VIEWS[v])v="now";view=v;sel=null;render()}
+document.getElementById("tabs").addEventListener("click",ev=>{const b=ev.target.closest(".tab");if(!b)return;location.hash=b.dataset.v;setView(b.dataset.v)});
+window.addEventListener("hashchange",()=>setView(location.hash.slice(1)));
+setView(location.hash.slice(1)||"now");
+</script>
+</body>
+</html>
