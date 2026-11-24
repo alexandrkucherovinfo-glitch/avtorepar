@@ -95,12 +95,67 @@ main{max-width:1180px;margin:0 auto;padding-bottom:40px}
 .note{max-width:1180px;margin:0 auto 18px;font-size:12.5px;color:var(--muted)}
 footer{max-width:1180px;margin:0 auto;padding:24px 0 40px;color:var(--muted);font-size:12px}
 @media (max-width:480px){.topbar h1{font-size:17px}.stat .n{font-size:18px}}
+.maps{max-width:1180px;margin:0 auto;padding-top:16px}
+.maps h2{font-size:16px;margin:0 0 10px;color:var(--navy)}
+.map-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.map-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;height:100%;min-width:0;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:12px;padding:14px 14px 12px}
+.map-card:hover{border-color:var(--navy-2)}
+.map-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.map-card .k{font-family:var(--font-display);font-weight:700;font-size:16px;line-height:1.25;color:var(--ink)}
+.map-card .subk{font-size:13.5px;font-weight:600;line-height:1.3;color:var(--navy)}
+.map-card .s{font-size:14px;line-height:1.45;color:var(--muted)}
+.map-card .go{margin-top:auto;padding-top:8px;font-size:14px;font-weight:700;color:var(--navy)}
+.maps-more{margin:10px 0 0;font-size:14px}
+@media (max-width:640px){.map-grid{grid-template-columns:1fr}.map-card{padding:16px}}
 </style>
 
 <div class="topbar gutter"><div class="topbar-inner">
   <h1>Дистрибьюторы АВТОРЕПАР</h1>
   <span class="tag">842 компании · abcp.ru + реестры ПСР · 23.10.2026</span>
 </div></div>
+
+<section class="maps gutter" id="maps" aria-labelledby="maps-title">
+  <h2 id="maps-title">Карты связей</h2>
+  <div class="map-grid">
+    <a class="map-card" href="/map/">
+      <span class="k">Карта связей</span>
+      <span class="s">Игроки вокруг Autorepar: деньги, клиенты, сети СТО, дистрибуция, бренды и разрыв VIN → заказ-наряд → запчасть.</span>
+      <span class="go">Открыть на сайте</span>
+    </a>
+    <a class="map-card" href="/asto/">
+      <span class="k">Карта связей АГР</span>
+      <span class="subk">АСТО для АГР</span>
+      <span class="s">Сеть независимых автосервисов и предложение этапа Discovery.</span>
+      <span class="go">Открыть на сайте</span>
+    </a>
+    <a class="map-card" href="https://claude.ai/artifact/GB1YjmAWdUioSd7hJUYd4X" target="_blank" rel="noopener">
+      <span class="k">Карта связей Авито</span>
+      <span class="s">Интерактивная карта. Открывается в новой вкладке.</span>
+      <span class="go">Открыть</span>
+    </a>
+    <a class="map-card" href="https://claude.ai/artifact/NX7zsdmQZ983MeXKMCgbNR" target="_blank" rel="noopener">
+      <span class="k">Карта связей Ozon</span>
+      <span class="s">Интерактивная карта. Открывается в новой вкладке.</span>
+      <span class="go">Открыть</span>
+    </a>
+    <a class="map-card" href="https://claude.ai/artifact/RiKBcSfaf9iPbS2GAmZ1sF" target="_blank" rel="noopener">
+      <span class="k">Карта связей РОЛЬФ</span>
+      <span class="s">Интерактивная карта. Открывается в новой вкладке.</span>
+      <span class="go">Открыть</span>
+    </a>
+    <a class="map-card" href="https://claude.ai/artifact/7s5qLyyyeveLRaUWJSpuUC" target="_blank" rel="noopener">
+      <span class="k">Карта связей Major Сеть</span>
+      <span class="s">Интерактивная карта. Открывается в новой вкладке.</span>
+      <span class="go">Открыть</span>
+    </a>
+    <a class="map-card" href="https://claude.ai/artifact/F7Mpg6DebEcJqMMNV54ys7#now" target="_blank" rel="noopener">
+      <span class="k">Карта связей Мепарт точка</span>
+      <span class="s">Интерактивная карта. Открывается в новой вкладке.</span>
+      <span class="go">Открыть</span>
+    </a>
+  </div>
+  <p class="maps-more"><a href="/graph/">Карта отрасли</a></p>
+</section>
 
 <div class="stats gutter">
   <div class="stats-grid" id="stats"></div>
