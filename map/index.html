@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#060A12">
+<title>Карта связей игроков — АВТОРЕПАР</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#060A12; --panel:#0C1322; --panel2:#101A2E; --line:#1C2A45; --line2:#2A3B5E;
+  --fg:#E6EEF9; --muted:#A9B6CE; --dim:#7E8DAA;
+  --cyan:#43D3FF; --amber:#FFB547; --coral:#FF8A8A;
+  --f-display:"Unbounded","Onest",system-ui,sans-serif;
+  --f-body:"Onest",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--f-body);font-size:16.5px;line-height:1.55;
+  background-image:radial-gradient(1000px 480px at 80% -10%,rgba(67,211,255,.08),transparent 60%),radial-gradient(800px 420px at 0% 100%,rgba(255,181,71,.05),transparent 55%)}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.skip{position:absolute;left:12px;top:-48px;background:var(--amber);color:#1A1406;padding:8px 12px;border-radius:8px;font-weight:700;z-index:40}
+.skip:focus{top:12px}
+.wrap{width:min(1100px,100%);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.top{position:sticky;top:0;z-index:20;background:rgba(6,10,18,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;padding:12px 0}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;min-height:44px}
+.logo{width:36px;height:36px;border:1px solid var(--amber);border-radius:8px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;color:var(--amber);font-size:15px}
+.brand strong{display:block;font-family:var(--f-display);font-size:14px;letter-spacing:.06em;font-weight:700}
+.brand small{display:block;font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.nav{display:flex;flex-wrap:wrap;gap:6px}
+.nav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--muted);font-size:14px}
+.nav a[aria-current="page"]{color:var(--fg);border-color:var(--cyan);background:var(--panel2)}
+main{padding:28px 0 64px}
+.lead{margin:0 0 18px;max-width:68ch;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0 0 12px;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:500;font-size:22px;line-height:1.25;margin:36px 0 12px;text-wrap:balance}
+h2 span,h3 span{color:var(--cyan);font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;margin-right:8px;font-weight:600}
+h3{font-family:var(--f-display);font-weight:500;font-size:16px;margin:0 0 6px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin:0 0 12px}
+.scheme{display:grid;gap:10px}
+.center,.sat{border-radius:12px;padding:14px;min-width:0}
+.center{order:-1;text-align:center;border:1px solid var(--amber);background:#1A1406;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.center span{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+.center strong{font-family:var(--f-display);font-size:clamp(22px,3vw,28px);font-weight:700;color:var(--amber)}
+.center em{font-style:normal;color:var(--muted);font-size:14px}
+.sat{display:flex;align-items:center;justify-content:center;text-align:center;background:var(--panel2);border:1px solid var(--line2);font-weight:600}
+.chain{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.step{flex:1;border:1px solid var(--coral);border-radius:12px;padding:12px;background:rgba(255,111,111,.06)}
+.step b{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--coral);font-weight:600}
+.arrow{align-self:center;color:var(--coral);font-size:18px}
+.gapnote{margin:10px 0 0;color:var(--coral)}
+.cta{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;min-height:56px;margin-top:16px;padding:14px 18px;border-radius:12px;background:var(--amber);color:#1A1406;text-decoration:none;text-align:center;font-family:var(--f-display);font-weight:700;font-size:18px}
+.cta:hover{filter:brightness(1.05)}
+.cta small{font-family:var(--f-body);font-weight:600;font-size:13px}
+.fine{margin:10px 0 0;color:var(--muted);font-size:14px}
+.url{margin:6px 0 0;font-family:var(--f-mono);font-size:12.5px;color:var(--dim);overflow-wrap:anywhere}
+.blocks{display:grid;gap:10px}
+.block{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.block p{margin:0;color:var(--muted)}
+.cards{display:grid;gap:10px}
+.card{display:flex;flex-direction:column;gap:6px;min-width:0;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;min-height:100%}
+.card:hover{border-color:var(--cyan)}
+.card strong{font-family:var(--f-display);font-weight:500;font-size:16px}
+.card .subk{color:var(--amber);font-size:14px;font-weight:600}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.card em{margin-top:auto;padding-top:8px;font-style:normal;font-weight:700;color:var(--cyan);font-size:14px}
+footer{border-top:1px solid var(--line);padding:18px 0 28px;color:var(--dim);font-size:13px}
+@media (min-width:720px){
+  .scheme{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"a core b" "c core d" ". core e";align-items:stretch}
+  .center{grid-area:core;order:0;min-height:180px}
+  .sat.a{grid-area:a}.sat.b{grid-area:b}.sat.c{grid-area:c}.sat.d{grid-area:d}.sat.e{grid-area:e}
+  .chain{flex-direction:row;align-items:stretch}
+  .blocks{grid-template-columns:1fr 1fr}
+  .cards{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">К содержанию</a>
+<header class="top"><div class="wrap top-in">
+  <a class="brand" href="/"><span class="logo" aria-hidden="true">A</span><span><strong>АВТОРЕПАР</strong><small>Карта связей игроков</small></span></a>
+  <nav class="nav" aria-label="Разделы">
+    <a href="/">Главная</a>
+    <a href="/map/" aria-current="page">Карта связей</a>
+    <a href="/asto/">АСТО для АГР</a>
+    <a href="/graph/">Карта отрасли</a>
+  </nav>
+</div></header>
+<main class="wrap" id="content">
+  <h1>Карта связей игроков</h1>
+  <p class="lead">Тёмная схема игроков вокруг Autorepar. В центре — АВТОРЕПАР, вокруг деньги, клиенты, сети СТО, дистрибуция и бренды. Отдельно показан разрыв цепочки VIN → заказ-наряд → запчасть. Ниже — схема блоков. Живая карта открывается кнопкой: площадка не разрешает встроить её в эту страницу.</p>
+
+  <section class="panel" aria-labelledby="preview-title">
+    <p class="eyebrow" id="preview-title">Схема блоков</p>
+    <div class="scheme">
+      <article class="center">
+        <span>Центр</span>
+        <strong>Autorepar</strong>
+        <em>АВТОРЕПАР</em>
+      </article>
+      <article class="sat a">Деньги</article>
+      <article class="sat b">Клиенты</article>
+      <article class="sat c">Сети СТО</article>
+      <article class="sat d">Дистрибуция</article>
+      <article class="sat e">Бренды</article>
+    </div>
+    <div class="chain" aria-label="Разрыв цепочки">
+      <div class="step"><b>01</b>VIN</div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="step"><b>02</b>Заказ-наряд</div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="step"><b>03</b>Запчасть</div>
+    </div>
+    <p class="gapnote">Разрыв: три звена есть, общей связи между ними нет.</p>
+    <a class="cta" href="https://claude.ai/artifact/AC1eLbRpsKhycgxZ7Pv9dC" target="_blank" rel="noopener">Открыть интерактивную карту</a>
+    <p class="fine">Кнопка открывает карту в новой вкладке. Кадр площадки на этот сайт не встаёт.</p>
+    <p class="url">https://claude.ai/artifact/AC1eLbRpsKhycgxZ7Pv9dC</p>
+  </section>
+
+  <h2 id="blocks"><span>01</span>Описание блоков</h2>
+  <div class="blocks">
+    <article class="block">
+      <h3>Autorepar</h3>
+      <p>Центр карты. От АВТОРЕПАР читаются связи с остальными игроками.</p>
+    </article>
+    <article class="block">
+      <h3>Деньги</h3>
+      <p>Где на рынке возникают обороты ремонта и запчастей относительно АВТОРЕПАР.</p>
+    </article>
+    <article class="block">
+      <h3>Клиенты</h3>
+      <p>Те, кто привозит автомобиль в сервис и создаёт спрос для сетей и дистрибуции.</p>
+    </article>
+    <article class="block">
+      <h3>Сети СТО</h3>
+      <p>Автосервисы, в которых автомобиль встречается с работой и запчастью.</p>
+    </article>
+    <article class="block">
+      <h3>Дистрибуция</h3>
+      <p>Канал, по которому запчасть доходит до сервиса.</p>
+    </article>
+    <article class="block">
+      <h3>Бренды</h3>
+      <p>Марки запчастей, которые проходят через дистрибуцию и попадают в заказ сервиса.</p>
+    </article>
+    <article class="block">
+      <h3>VIN → заказ-наряд → запчасть</h3>
+      <p>VIN определяет автомобиль, заказ-наряд фиксирует работу, запчасть — деталь в этом заказе. На карте цепочка показана как разрыв: звенья есть, одной наблюдаемой связи нет.</p>
+    </article>
+  </div>
+
+  <h2 id="materials"><span>02</span>Карты и материалы</h2>
+  <div class="cards">
+    <a class="card" href="/asto/">
+      <strong>Карта связей АГР</strong>
+      <span class="subk">АСТО для АГР</span>
+      <p>Сеть независимых автосервисов и этап Discovery.</p>
+      <em>Открыть на сайте</em>
+    </a>
+    <a class="card" href="https://claude.ai/artifact/GB1YjmAWdUioSd7hJUYd4X" target="_blank" rel="noopener">
+      <strong>Карта связей Авито</strong>
+      <p>Интерактивная карта. Открывается в новой вкладке.</p>
+      <em>Открыть</em>
+    </a>
+    <a class="card" href="https://claude.ai/artifact/NX7zsdmQZ983MeXKMCgbNR" target="_blank" rel="noopener">
+      <strong>Карта связей Ozon</strong>
+      <p>Интерактивная карта. Открывается в новой вкладке.</p>
+      <em>Открыть</em>
+    </a>
+    <a class="card" href="https://claude.ai/artifact/RiKBcSfaf9iPbS2GAmZ1sF" target="_blank" rel="noopener">
+      <strong>Карта связей РОЛЬФ</strong>
+      <p>Интерактивная карта. Открывается в новой вкладке.</p>
+      <em>Открыть</em>
+    </a>
+    <a class="card" href="https://claude.ai/artifact/7s5qLyyyeveLRaUWJSpuUC" target="_blank" rel="noopener">
+      <strong>Карта связей Major Сеть</strong>
+      <p>Интерактивная карта. Открывается в новой вкладке.</p>
+      <em>Открыть</em>
+    </a>
+    <a class="card" href="https://claude.ai/artifact/F7Mpg6DebEcJqMMNV54ys7#now" target="_blank" rel="noopener">
+      <strong>Карта связей Мепарт точка</strong>
+      <p>Интерактивная карта. Открывается в новой вкладке.</p>
+      <em>Открыть</em>
+    </a>
+    <a class="card" href="/graph/">
+      <strong>Карта отрасли</strong>
+      <p>Опубликованный разрез связей отрасли.</p>
+      <em>Открыть на сайте</em>
+    </a>
+  </div>
+</main>
+<footer><div class="wrap">АВТОРЕПАР · карта связей игроков. Схема на странице — превью блоков, не замена интерактивной карты.</div></footer>
+</body>
+</html>
